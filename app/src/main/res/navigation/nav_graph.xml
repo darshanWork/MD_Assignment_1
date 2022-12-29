@@ -36,12 +36,20 @@
         android:id="@+id/earthFragment"
         android:name="com.dd.mdassignmentapp.EarthFragment"
         android:label="fragment_earth"
-        tools:layout="@layout/fragment_earth" />
+        tools:layout="@layout/fragment_earth" >
+        <action
+            android:id="@+id/action_earthFragment_to_gameOverFragment"
+            app:destination="@id/gameOverFragment" />
+    </fragment>
     <fragment
         android:id="@+id/moonFragment"
         android:name="com.dd.mdassignmentapp.MoonFragment"
         android:label="fragment_moon"
-        tools:layout="@layout/fragment_moon" />
+        tools:layout="@layout/fragment_moon" >
+        <action
+            android:id="@+id/action_moonFragment_to_gameOverFragment"
+            app:destination="@id/gameOverFragment" />
+    </fragment>
     <fragment
         android:id="@+id/howToPlayFragment"
         android:name="com.dd.mdassignmentapp.HowToPlayFragment"
@@ -52,4 +60,13 @@
         android:name="com.dd.mdassignmentapp.LearnMoreFragment"
         android:label="fragment_learn_more"
         tools:layout="@layout/fragment_learn_more" />
+    <fragment
+        android:id="@+id/gameOverFragment"
+        android:name="com.dd.mdassignmentapp.GameOverFragment"
+        android:label="fragment_game_over"
+        tools:layout="@layout/fragment_game_over" >
+        <action
+            android:id="@+id/action_gameOverFragment_to_optionsFragment"
+            app:destination="@id/optionsFragment" />
+    </fragment>
 </navigation>
