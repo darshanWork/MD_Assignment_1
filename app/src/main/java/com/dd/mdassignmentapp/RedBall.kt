@@ -3,36 +3,41 @@ package com.dd.mdassignmentapp
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 
-open class RedBall (var width:Int, var height:Int, var x:Int, var y:Int, var dx:Int, var dy:Int, var image:Drawable) {
+open class RedBall(width: Int, height: Int, x: Int, y: Int, image: Drawable) :
+    GameObject(width, height, x, y, image) {
 
-    open fun move(canvas: Canvas)
+    open fun move(canvas: Canvas, dx: Int)
     {
-        x += dx
-        y += dy
         if(x>(canvas.width-width) || x<0)
-            dx = -dx
-        if(y>(canvas.height-height) || y<0)
-            dy = -dy
-        image.setBounds(x, y,x+width,y+height)
-        image.draw(canvas)
+        {
+            x += 0
+        }
+        else
+        {
+            x += dx
+        }
     }
 
-    /**
-     * open fun jump(canvas: Canvas)
+    open fun jump(canvas: Canvas, dy: Int)
     {
-    y += dy
-    /**
-    while(//collision)
+        if(y > (canvas.height-height) || y < 0)
+        {
+            y += 0
+        }
+        else
+        {
+            for(i in 1..dy)
+            {
+                y -= 1
+            }
+        }
+    }
+
+    open fun drop(canvas: Canvas)
     {
+        while (y < 1680)
+        {
+            y += 1
+        }
     }
-     *
-    */
-    for(i in 1..5)
-    {
-    y -= 1
-    image.setBounds(x, y,x+width,y+height)
-    image.draw(canvas)
-    }
-    }
-     */
 }

@@ -45,7 +45,9 @@ class GameOverFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_game_over, container, false)
+        //return inflater.inflate(R.layout.fragment_game_over, container, false)
+        binding = FragmentGameOverBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     companion object {

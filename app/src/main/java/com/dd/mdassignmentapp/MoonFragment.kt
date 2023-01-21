@@ -1,13 +1,19 @@
 package com.dd.mdassignmentapp
 
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import com.dd.mdassignmentapp.databinding.FragmentEarthBinding
+import androidx.navigation.fragment.findNavController
 import com.dd.mdassignmentapp.databinding.FragmentMoonBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -20,11 +26,13 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MoonFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MoonFragment : Fragment() {
+class MoonFragment : Fragment(), SensorEventListener {
     // TODO: Rename and change types of parameters
     private lateinit var binding : FragmentMoonBinding
     private lateinit var navController: NavController
     private lateinit var myViewModel: MyViewModel
+    private lateinit var sensorManager: SensorManager
+    lateinit var accelerometer: Sensor
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,6 +41,26 @@ class MoonFragment : Fragment() {
         //create model for fragment
         myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
         var myModel = myViewModel.myLiveModel.value
+
+        //sensor management
+        sensorManager = requireActivity().getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+        val deviceSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
+
+        for(s in deviceSensors) {
+            Log.d("MyTAG",s.name)
+        }
+
+        //accelerometer
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_STATUS_ACCURACY_LOW)
+
+        //navigation
+        navController = findNavController()
+        if(!binding.moonSurfaceView.isRunning)
+        {
+            navController.navigate(R.id.action_moonFragment_to_gameOverFragment)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,5 +100,42 @@ class MoonFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (event == null)
+            return
+
+        if (event.sensor.type == Sensor.TYPE_ACCELEROMETER)
+        {
+            var x=event.values[0]
+            var y=event.values[1]
+            var z=event.values[2]
+
+
+            var myText = "%.2f".format(x) + " %.2f".format(y) + " %.2f".format(z)
+
+
+            if(event.values[0] > 1f)
+            {
+                binding.moonSurfaceView.redBall.move(binding.moonSurfaceView.canvas, -50)
+                myText += " MOVE LEFT"
+            }
+            else if(event.values[0] < -1f)
+            {
+                binding.moonSurfaceView.redBall.move(binding.moonSurfaceView.canvas, 50)
+                myText += " MOVE RIGHT"
+            }
+            /*else
+            {
+                //binding.moonSurfaceView.redBall.move(binding.moonSurfaceView.canvas, 0)
+            }*/
+
+            Log.d("MyTAG",myText)
+        }
+    }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+
     }
 }
